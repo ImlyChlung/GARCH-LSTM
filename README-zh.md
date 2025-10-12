@@ -9,23 +9,8 @@ GARCH(1,1) 模型：
 ![GARCH(1,1) 模型公式](figue/GARCH_equation.png)
 
 
-LSTM 目標：使用特徵 $ { \sigma_t, \text{HL_Range}_t, \text{Log_Volume}t, \text{Volume_ZScore}t }{t-9:t} $ 預測 $ \sigma{t+1} $。
-
-
-GARCH(1,1) 波動性估計：
-
-使用 yfinance 下載 2021-01-01 至 2025-10-11 的 QQQ 歷史股票數據（含 50 天額外數據用於滾動計算）。
-計算指數收益率：$ y_t = 100 \cdot \ln(P_t / P_{t-1}) $。
-計算 高低價範圍、對數成交量 和 20 天滾動 成交量 Z 分數。
-擬合常數均值的 GARCH(1,1) 模型，假設正態分佈。
-生成 garch_data.csv，包含欄位：Date、Returns、Conditional_Volatility、HL_Range、Log_Volume、Volume_ZScore。
-可視化條件波動性 $ \sigma_t $ 和 95% VaR：$ \text{VaR}_{95%} = \mu - 1.96 \cdot \sigma_t $。
-
-
-LSTM 波動性預測：
-
-載入 garch_data.csv，準備 LSTM 訓練特徵。
-訓練雙層 LSTM 模型，預測下一交易日的條件波動性 $ \sigma_{t+1} $。
-支援 PyTorch 的 GPU 加速（若可用）。
-可視化訓練/驗證損失及實際與預測波動性 $ \sigma_t $ 比較。
-提供下一交易日的波動性預測，輔助交易決策。
+LSTM 模型：使用特徵 
+1. 波動性 Conditional_Volatility
+2. 最高價和最低價的指數百分比 High-Low Range
+3. 單日成交量變化指數百分比 Log Volume
+4. 成交量相比前20日的z-score水平
