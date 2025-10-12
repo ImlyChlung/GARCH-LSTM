@@ -1,31 +1,31 @@
 Volatility Forecasting with GARCH and LSTM
 Overview
-This project combines GARCH(1,1) and LSTM models to forecast stock price volatility (( \sigma_t )) for assets like the Invesco QQQ Trust (QQQ). The GARCH.py script estimates conditional volatility using a GARCH(1,1) model with log returns, incorporating features like High-Low Range and Volume Z-Score. The GARCH-LSTM.py script trains an LSTM model to predict the next day's volatility (( \sigma_{t+1} )) using features from garch_data.csv. This approach is ideal for short-term trading analysis.
+This project combines GARCH(1,1) and LSTM models to forecast stock price volatility ($ \sigma_t $) for assets like the Invesco QQQ Trust (QQQ). The GARCH.py script estimates conditional volatility using a GARCH(1,1) model with log returns, incorporating features like High-Low Range and Volume Z-Score. The GARCH-LSTM.py script trains an LSTM model to predict the next day's volatility ($ \sigma_{t+1} $) using features from garch_data.csv. This approach is ideal for short-term trading analysis.
 GARCH(1,1) Model:
 
-Mean Equation: ( y_t = \mu + \epsilon_t, \quad \epsilon_t = z_t \cdot \sigma_t, \quad z_t \sim N(0, 1) )
-Variance Equation: ( \sigma_t^2 = \omega + \alpha \epsilon_{t-1}^2 + \beta \sigma_{t-1}^2 )
+Mean Equation: $$ y_t = \mu + \epsilon_t, \quad \epsilon_t = z_t \cdot \sigma_t, \quad z_t \sim N(0, 1) $$
+Variance Equation: $$ \sigma_t^2 = \omega + \alpha \epsilon_{t-1}^2 + \beta \sigma_{t-1}^2 $$
 
-LSTM Objective: Predict ( \sigma_{t+1} ) using features { ( \sigma_t, HL_Range_t, Log_Volume_t, Volume_ZScore_t }_{t-n:t} ).
+LSTM Objective: Predict $ \sigma_{t+1} $ using features $ { \sigma_t, \text{HL_Range}_t, \text{Log_Volume}_t, \text{Volume_ZScore}t }{t-9:t} $.
 For Chinese documentation, see README_zh.md.
 Features
 
 GARCH(1,1) Volatility Estimation:
 
 Downloads QQQ data (2021-01-01 to 2025-10-11) using yfinance.
-Computes log returns: ( y_t = 100 \cdot \ln(P_t / P_{t-1}) ).
+Computes log returns: $ y_t = 100 \cdot \ln(P_t / P_{t-1}) $.
 Calculates High-Low Range, Log Volume, and 20-day Volume Z-Score.
 Fits GARCH(1,1) with constant mean and normal distribution.
 Outputs garch_data.csv with columns: Date, Returns, Conditional_Volatility, HL_Range, Log_Volume, Volume_ZScore.
-Visualizes ( \sigma_t ) and 95% VaR: ( VaR_{95%} = \mu - 1.96 \cdot \sigma_t ).
+Visualizes $ \sigma_t $ and 95% VaR: $ \text{VaR}_{95%} = \mu - 1.96 \cdot \sigma_t $.
 
 
 LSTM Volatility Prediction:
 
-Trains a two-layer LSTM to predict ( \sigma_{t+1} ).
+Trains a two-layer LSTM to predict $ \sigma_{t+1} $.
 Uses features from garch_data.csv with sequence length 10.
 Supports GPU acceleration via PyTorch.
-Visualizes training/validation loss and actual vs. predicted ( \sigma_t ).
+Visualizes training/validation loss and actual vs. predicted $ \sigma_t $.
 Outputs next-day volatility predictions.
 
 
@@ -120,15 +120,15 @@ def train_lstm_model(csv_path='garch_data.csv', seq_length=10, epochs=150):
 
 Mathematical Formulation
 GARCH(1,1) Model
-[\begin{cases}y_t = \mu + \epsilon_t \\epsilon_t = z_t \cdot \sigma_t, \quad z_t \sim N(0, 1) \\sigma_t^2 = \omega + \alpha \epsilon_{t-1}^2 + \beta \sigma_{t-1}^2\end{cases}]
+$$\begin{cases}y_t = \mu + \epsilon_t \\epsilon_t = z_t \cdot \sigma_t, \quad z_t \sim N(0, 1) \\sigma_t^2 = \omega + \alpha \epsilon_{t-1}^2 + \beta \sigma_{t-1}^2\end{cases}$$
 
-Long-term Volatility: ( \sigma^2 = \frac{\omega}{1 - \alpha - \beta} )
-95% VaR: ( VaR_{95%} = \mu - 1.96 \cdot \sigma_t )
+Long-term Volatility: $$ \sigma^2 = \frac{\omega}{1 - \alpha - \beta} $$
+95% VaR: $$ \text{VaR}_{95%} = \mu - 1.96 \cdot \sigma_t $$
 
 LSTM Prediction
 
-Input: Sequence of { ( \sigma_t, HL_Range_t, Log_Volume_t, Volume_ZScore_t }_{t-9:t}
-Output: Predicted ( \sigma_{t+1} )
+Input: Sequence of $ { \sigma_t, \text{HL_Range}_t, \text{Log_Volume}_t, \text{Volume_ZScore}t }{t-9:t} $
+Output: Predicted $ \sigma_{t+1} $
 
 Project Structure
 volatility-forecasting/
@@ -180,40 +180,40 @@ Description
 
 
 
-( \mu )
+$ \mu $
 0.0886%
 Daily mean return
 
 
-( \omega )
+$ \omega $
 0.2090
 Base variance
 
 
-( \alpha )
+$ \alpha $
 0.0119
 Short-term shock
 
 
-( \beta )
+$ \beta $
 0.9753
 Long-term persistence
 
 
-Long-term ( \sigma )
+Long-term $ \sigma $
 4.0380%
-( \sqrt{\frac{\omega}{1-\alpha-\beta}} )
+$ \sqrt{\frac{\omega}{1-\alpha-\beta}} $
 
 
 LSTM Performance
 
-MSE Loss: Evaluates prediction accuracy for ( \sigma_{t+1} )
+MSE Loss: Evaluates prediction accuracy for $ \sigma_{t+1} $
 Next-Day Prediction: Forecast for trading decisions
 
 Future Improvements
 
-Multi-Step Forecasting: Predict ( \sigma_{t+1} ) to ( \sigma_{t+10} ).
-Advanced GARCH: Use EGARCH: ( \ln(\sigma_t^2) = \omega + \alpha |z_{t-1}| + \gamma z_{t-1} + \beta \ln(\sigma_{t-1}^2) ).
+Multi-Step Forecasting: Predict $ \sigma_{t+1} $ to $ \sigma_{t+10} $.
+Advanced GARCH: Use EGARCH: $$ \ln(\sigma_t^2) = \omega + \alpha |z_{t-1}| + \gamma z_{t-1} + \beta \ln(\sigma_{t-1}^2) $$.
 Features: Add RSI, MACD, or S&P 500 index.
 Tuning: Optimize LSTM sequence length and hidden size.
 Trading: Integrate with analyze_buy_signals.
