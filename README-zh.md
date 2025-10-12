@@ -6,9 +6,9 @@
 
 GARCH(1,1) 模型：
 
-<div align="center">
+<p align="center">
 ![GARCH(1,1) 模型公式](figue/GARCH_equation.png)
-</div>
+</p>
 
 均值方程：$$ y_t = \mu + \epsilon_t, \quad \epsilon_t = z_t \cdot \sigma_t, \quad z_t \sim N(0, 1) $$
 方差方程：$$ \sigma_t^2 = \omega + \alpha \epsilon_{t-1}^2 + \beta \sigma_{t-1}^2 $$
