@@ -25,7 +25,7 @@ def load_data(csv_path='garch_data.csv'):
     - df: DataFrame with selected features
     """
     df = pd.read_csv(csv_path)
-    required_columns = ['Date', 'Conditional_Volatility', 'HL_Range', 'Log_Volume', 'Volume_ZScore']
+    required_columns = ['Date', 'Returns','Conditional_Volatility', 'HL_Range', 'Log_Volume', 'Volume_ZScore']
     if not all(col in df.columns for col in required_columns):
         raise ValueError(f"Missing required columns. Found: {df.columns}, Required: {required_columns}")
 
@@ -52,13 +52,13 @@ def create_sequences(data, seq_length=10):
     X, y = [], []
     for i in range(len(data) - seq_length):
         X.append(data[i:i + seq_length])
-        y.append(data[i + seq_length, 0])  # Predict next day's Conditional_Volatility
+        y.append(data[i + seq_length, 1])  # Predict next day's Conditional_Volatility
     return np.array(X), np.array(y)
 
 
 # Step 3: Define LSTM model
 class LSTMModel(nn.Module):
-    def __init__(self, input_size=4, hidden_size=64, num_layers=2, dropout=0.2):
+    def __init__(self, input_size=5, hidden_size=64, num_layers=2, dropout=0.2):
         super(LSTMModel, self).__init__()
         self.lstm = nn.LSTM(input_size, hidden_size, num_layers, batch_first=True, dropout=dropout)
         self.fc = nn.Linear(hidden_size, 1)
@@ -93,7 +93,7 @@ def predict_next_day(model, scaler, csv_path='garch_data.csv', seq_length=10):
         raise ValueError(f"Dataset has {len(df)} rows, but {seq_length} are required for prediction.")
 
     # Get the last seq_length days
-    last_sequence = df[['Conditional_Volatility', 'HL_Range', 'Log_Volume', 'Volume_ZScore']].values[-seq_length:]
+    last_sequence = df[['Returns', 'Conditional_Volatility', 'HL_Range', 'Log_Volume', 'Volume_ZScore']].values[-seq_length:]
     last_date = df.index[-1]
 
     # Scale the sequence
@@ -113,15 +113,15 @@ def predict_next_day(model, scaler, csv_path='garch_data.csv', seq_length=10):
         pred = model(input_tensor).cpu().numpy()
 
     # Inverse transform prediction
-    pred_full = np.zeros((1, 4))  # Dummy array for inverse transform
-    pred_full[:, 0] = pred.flatten()
-    next_day_pred = scaler.inverse_transform(pred_full)[0, 0]
+    pred_full = np.zeros((1, 5))  # Dummy array for inverse transform
+    pred_full[:, 1] = pred.flatten()
+    next_day_pred = scaler.inverse_transform(pred_full)[0, 1]
 
     return next_day_pred, last_date
 
 
 # Step 5: Main LSTM pipeline
-def train_lstm_model(csv_path='garch_data.csv', seq_length=10, epochs=150, batch_size=32, learning_rate=0.001):
+def train_lstm_model(csv_path='garch_data.csv', seq_length=10, epochs=100, batch_size=32, learning_rate=0.001):
     """
     Train LSTM model using PyTorch to predict next day's Conditional_Volatility.
 
@@ -141,7 +141,7 @@ def train_lstm_model(csv_path='garch_data.csv', seq_length=10, epochs=150, batch
     """
     # Load data
     df = load_data(csv_path)
-    features = df[['Conditional_Volatility', 'HL_Range', 'Log_Volume', 'Volume_ZScore']].values
+    features = df[['Returns', 'Conditional_Volatility', 'HL_Range', 'Log_Volume', 'Volume_ZScore']].values
     dates = df.index  # Store dates for plotting
 
     # Scale features
@@ -170,7 +170,7 @@ def train_lstm_model(csv_path='garch_data.csv', seq_length=10, epochs=150, batch
         print(f"GPU: {torch.cuda.get_device_name(0)}, CUDA Version: {torch.version.cuda}")
 
     # Initialize model, loss function, and optimizer
-    model = LSTMModel(input_size=4, hidden_size=32, num_layers=2, dropout=0.2).to(device)
+    model = LSTMModel(input_size=5, hidden_size=64, num_layers=2, dropout=0.2).to(device)
     criterion = nn.MSELoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
@@ -219,13 +219,13 @@ def train_lstm_model(csv_path='garch_data.csv', seq_length=10, epochs=150, batch
         y_pred = model(X_test_dev).cpu().numpy()
 
     # Inverse transform predictions and actual values
-    y_test_full = np.zeros((len(y_test), 4))  # Dummy array for inverse transform
-    y_test_full[:, 0] = y_test.flatten()  # Place actual values in first column
-    y_pred_full = np.zeros((len(y_pred), 4))  # Dummy array for predictions
-    y_pred_full[:, 0] = y_pred.flatten()  # Place predictions in first column
+    y_test_full = np.zeros((len(y_test), 5))  # Dummy array for inverse transform
+    y_test_full[:, 1] = y_test.flatten()  # Place actual values in Conditional_Volatility column
+    y_pred_full = np.zeros((len(y_pred), 5))  # Dummy array for predictions
+    y_pred_full[:, 1] = y_pred.flatten()  # Place predictions in Conditional_Volatility column
 
-    y_test_inv = scaler.inverse_transform(y_test_full)[:, 0]  # Extract Conditional_Volatility
-    y_pred_inv = scaler.inverse_transform(y_pred_full)[:, 0]  # Extract Conditional_Volatility
+    y_test_inv = scaler.inverse_transform(y_test_full)[:, 1]  # Extract Conditional_Volatility
+    y_pred_inv = scaler.inverse_transform(y_pred_full)[:, 1]  # Extract Conditional_Volatility
 
     # Plot results with dates
     plt.figure(figsize=(12, 6))
@@ -259,8 +259,6 @@ def train_lstm_model(csv_path='garch_data.csv', seq_length=10, epochs=150, batch
 if __name__ == "__main__":
     # Train model and get predictions for test set
     model, scaler, X_test, y_test, y_pred, test_dates = train_lstm_model(csv_path='garch_data.csv', seq_length=10)
-    print("Test MSE:", np.mean((y_test - y_pred) ** 2))
-
 
     # Predict next day's Conditional Volatility
     next_day_pred, last_date = predict_next_day(model, scaler, csv_path='garch_data.csv', seq_length=10)
