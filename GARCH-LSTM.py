@@ -25,7 +25,7 @@ def load_data(csv_path='garch_data.csv'):
     - df: DataFrame with selected features
     """
     df = pd.read_csv(csv_path)
-    required_columns = ['Date', 'Returns','Conditional_Volatility', 'HL_Range', 'Log_Volume', 'Volume_ZScore']
+    required_columns = ['Date','Conditional_Volatility', 'Returns', 'HL_Range', 'Log_Volume', 'Volume_ZScore']
     if not all(col in df.columns for col in required_columns):
         raise ValueError(f"Missing required columns. Found: {df.columns}, Required: {required_columns}")
 
@@ -52,7 +52,7 @@ def create_sequences(data, seq_length=10):
     X, y = [], []
     for i in range(len(data) - seq_length):
         X.append(data[i:i + seq_length])
-        y.append(data[i + seq_length, 1])  # Predict next day's Conditional_Volatility
+        y.append(data[i + seq_length, 0])  # Predict next day's Conditional_Volatility
     return np.array(X), np.array(y)
 
 
@@ -93,7 +93,7 @@ def predict_next_day(model, scaler, csv_path='garch_data.csv', seq_length=10):
         raise ValueError(f"Dataset has {len(df)} rows, but {seq_length} are required for prediction.")
 
     # Get the last seq_length days
-    last_sequence = df[['Returns', 'Conditional_Volatility', 'HL_Range', 'Log_Volume', 'Volume_ZScore']].values[-seq_length:]
+    last_sequence = df[['Conditional_Volatility', 'Returns', 'HL_Range', 'Log_Volume', 'Volume_ZScore']].values[-seq_length:]
     last_date = df.index[-1]
 
     # Scale the sequence
@@ -114,8 +114,8 @@ def predict_next_day(model, scaler, csv_path='garch_data.csv', seq_length=10):
 
     # Inverse transform prediction
     pred_full = np.zeros((1, 5))  # Dummy array for inverse transform
-    pred_full[:, 1] = pred.flatten()
-    next_day_pred = scaler.inverse_transform(pred_full)[0, 1]
+    pred_full[:, 0] = pred.flatten()
+    next_day_pred = scaler.inverse_transform(pred_full)[0, 0]
 
     return next_day_pred, last_date
 
@@ -141,7 +141,7 @@ def train_lstm_model(csv_path='garch_data.csv', seq_length=10, epochs=100, batch
     """
     # Load data
     df = load_data(csv_path)
-    features = df[['Returns', 'Conditional_Volatility', 'HL_Range', 'Log_Volume', 'Volume_ZScore']].values
+    features = df[['Conditional_Volatility', 'Returns', 'HL_Range', 'Log_Volume', 'Volume_ZScore']].values
     dates = df.index  # Store dates for plotting
 
     # Scale features
@@ -220,12 +220,12 @@ def train_lstm_model(csv_path='garch_data.csv', seq_length=10, epochs=100, batch
 
     # Inverse transform predictions and actual values
     y_test_full = np.zeros((len(y_test), 5))  # Dummy array for inverse transform
-    y_test_full[:, 1] = y_test.flatten()  # Place actual values in Conditional_Volatility column
+    y_test_full[:, 0] = y_test.flatten()  # Place actual values in Conditional_Volatility column
     y_pred_full = np.zeros((len(y_pred), 5))  # Dummy array for predictions
-    y_pred_full[:, 1] = y_pred.flatten()  # Place predictions in Conditional_Volatility column
+    y_pred_full[:, 0] = y_pred.flatten()  # Place predictions in Conditional_Volatility column
 
-    y_test_inv = scaler.inverse_transform(y_test_full)[:, 1]  # Extract Conditional_Volatility
-    y_pred_inv = scaler.inverse_transform(y_pred_full)[:, 1]  # Extract Conditional_Volatility
+    y_test_inv = scaler.inverse_transform(y_test_full)[:, 0]  # Extract Conditional_Volatility
+    y_pred_inv = scaler.inverse_transform(y_pred_full)[:, 0]  # Extract Conditional_Volatility
 
     # Plot results with dates
     plt.figure(figsize=(12, 6))
