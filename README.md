@@ -7,7 +7,7 @@ This project implements a hybrid model combining **GARCH(1,1)** and **LSTM** to 
 - **GARCH.py**: Uses the GARCH(1,1) model to estimate conditional volatility based on constant mean and index returns, incorporating features like high-low range (`HL_Range`) and volume Z-score (`Volume_ZScore`) to generate `garch_data.csv`.
 - **GARCH-LSTM.py**: Trains an LSTM model using `garch_data.csv` to analyze non-linear relationships between `Conditional_Volatility`, trading volume, and high-low price differences, predicting the next trading day's conditional volatility.
 
-This approach can be combined with volatility indicators like Historical Volatility (HV), Implied Volatility (IV), and VIX to help investors assess stock risk. For the Chinese version, see [README.md](README.md).
+This approach can be combined with volatility indicators like Historical Volatility (HV), Implied Volatility (IV), and VIX to help investors assess stock risk. For the Chinese version, see [README_zh.md](README_zh.md).
 
 ### GARCH(1,1) Model
 
