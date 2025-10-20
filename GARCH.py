@@ -111,8 +111,8 @@ def calculate_garch(ticker, start_date, end_date, forecast_horizon=10,
     # Step 5: Generate CSV file with additional features
     output_df = pd.DataFrame({
         'Date': data.index,
-        'Returns': data['Returns'],
         'Conditional_Volatility': cond_vol,
+        'Returns': data['Returns'],
         'HL_Range': data['HL_Range'],
         'Log_Volume': data['Log_Volume'],
         'Volume_ZScore': data['Volume_ZScore']
