@@ -12,7 +12,7 @@
 
 **可視化:**
 
-
+![GARCH graph](figue/GARCH_graph.png)
 
 ### LSTM 模型:
 
