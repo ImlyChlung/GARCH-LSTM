@@ -66,7 +66,7 @@ LSTM 模型以 10 天為一個序列（seq_length=10）的五個特徵作為輸�
 
 繪製訓練和驗證損失曲線，檢查模型訓練過程的穩定性和收斂性。
 
-以下是以Invesco QQQ Trust (QQQ)的 2021-01-01 到 2025-10-21 的數據訓練的模型，它的效果如下:
+以下是以Invesco QQQ Trust (QQQ)的 2021-01-01 到 2025-10-21 的數據訓練的模型，它的表現如下:
 
 ![performance1](figue/performance1.png)
 
