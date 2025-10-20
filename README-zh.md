@@ -49,11 +49,11 @@ LSTM 層:
 硬體支持: 模型支持 GPU 加速（如果可用），否則使用 CPU。
 損失監控: 訓練過程中記錄訓練損失和驗證損失（使用測試集作為代理），並繪製損失曲線以檢查模型收斂性。
 
-4. 預測功能
+### 4. 預測功能
 
 下一交易日預測: predict_next_day 函數使用訓練好的模型，基於最近 10 天的特徵序列，預測下一交易日的 Conditional_Volatility。
 
-5. 輸出與可視化
+### 5. 輸出與可視化
 
 預測結果: 模型生成測試集的預測值 (y_pred_inv)，並與實際值 (y_test_inv) 進行比較，計算測試集的 MSE。
 可視化:
@@ -62,5 +62,9 @@ LSTM 層:
 繪製訓練和驗證損失曲線，檢查模型訓練過程的穩定性和收斂性。
 
 以下是以Invesco QQQ Trust (QQQ)的 2021-01-01 到 2025-10-21 的數據訓練的模型，它的效果如下:
+
+![performance1](figue/performance1.png)
+
+![performance2](figue/performance2.png)
 
 
