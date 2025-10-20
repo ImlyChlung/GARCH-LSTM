@@ -78,6 +78,7 @@ The following results were obtained by training the model on Invesco QQQ Trust (
 
 ```bash
 pip install numpy pandas yfinance arch matplotlib torch sklearn
+```
 
 ## Usage
 
