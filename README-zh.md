@@ -27,9 +27,9 @@ LSTM 模型以 10 天為一個序列（seq_length=10）的五個特徵作為輸�
 
 ### 2. 模型結構 (可自行更改)
 
-LSTM 模型的架構如下：
+*LSTM 模型的架構如下：*
 
-- LSTM 層:
+**LSTM 層:**
 
 - 包含 2 層 LSTM（num_layers=2）。
 - 每層有 64 個隱藏單元（hidden_size=64）。
