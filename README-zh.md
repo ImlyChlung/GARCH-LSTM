@@ -78,3 +78,10 @@ LSTM 模型以 10 天為一個序列（seq_length=10）的五個特徵作為輸�
 ```
 pip install numpy pandas yfinance arch matplotlib torch sklearn
 ```
+
+## 使用方法
+
+1. 在**GARCH.py**中的ticker更改你想分析的股票代碼 (e.g ticker = 'NVDA')
+2. 選擇想分析的時間段(e.g start_date = '2020-01-01', end_date = '2025-10-21')
+3. run **GARCH.py**
+4. run **GARCH-LSTM.py**
