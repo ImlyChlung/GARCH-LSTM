@@ -73,4 +73,8 @@ LSTM 模型以 10 天為一個序列（seq_length=10）的五個特徵作為輸�
 
 ![performance2](figue/performance2.png)
 
+## 安裝
 
+```
+pip install numpy pandas yfinance arch matplotlib torch sklearn
+```
