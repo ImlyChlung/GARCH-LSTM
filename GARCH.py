@@ -8,7 +8,7 @@ from pandas.tseries.offsets import BDay
 
 ticker = 'QQQ'
 start_date = '2021-01-01'
-end_date='2025-10-11'
+end_date = '2025-10-21'
 
 def calculate_garch(ticker, start_date, end_date, forecast_horizon=10,
                     csv_path='garch_data.csv'):
@@ -40,10 +40,6 @@ def calculate_garch(ticker, start_date, end_date, forecast_horizon=10,
     # Convert MultiIndex columns to single index
 
     data.columns = [col[0] for col in data.columns]  # Keep first level (e.g., 'Volume' instead of ('Volume', 'AMZN'))
-
-    # Debug: Print data structure
-    print("\nData columns:", data.columns)
-    print("Data head:\n", data.head())
 
     # Verify required columns
     required_columns = ['Open', 'High', 'Low', 'Close', 'Volume']
