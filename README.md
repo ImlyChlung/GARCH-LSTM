@@ -9,7 +9,7 @@ This project implements a hybrid model combining **GARCH(1,1)** and **LSTM** to 
 
 This approach can be combined with volatility indicators like Historical Volatility (HV), Implied Volatility (IV), and VIX to help investors assess stock risk. For the Chinese version, see [README-zh.md](README-zh.md).
 
-### GARCH(1,1) Model
+### GARCH(1,1) Model:
 
 The GARCH(1,1) model estimates daily conditional volatility, with the formula shown below:
 
