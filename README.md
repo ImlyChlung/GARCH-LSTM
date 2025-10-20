@@ -5,7 +5,7 @@
 This project implements a hybrid model combining **GARCH(1,1)** and **LSTM** to predict the price volatility of financial assets, such as the Invesco QQQ Trust (QQQ), specifically the `Conditional_Volatility(t)`.
 
 - **GARCH.py**: Uses the GARCH(1,1) model to estimate conditional volatility based on constant mean and index returns, incorporating features like high-low range and volume Z-score to generate `garch_data.csv`.
-- **GARCH-LSTM.py**: Trains an LSTM model using `garch_data.csv` to analyze non-linear relationships between `Conditional_Volatility`, trading volume, and high-low price differences, predicting the next trading day's conditional volatility (`Conditional_Volatility(t+1)`). This approach can be combined with volatility indicators like HV, IV, and VIX to help investors assess stock risk. For the Chinese version, see **README.md**.
+- **GARCH-LSTM.py**: Trains an LSTM model using `garch_data.csv` to analyze non-linear relationships between `Conditional_Volatility`, trading volume, and high-low price differences, predicting the next trading day's conditional volatility (`Conditional_Volatility(t+1)`). This approach can be combined with volatility indicators like HV, IV, and VIX to help investors assess stock risk. For the Chinese version, see [README-zh.md](README-zh.md).
 
 ### GARCH(1,1) Model
 
