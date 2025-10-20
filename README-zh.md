@@ -31,9 +31,9 @@ LSTM 模型的架構如下：
 
 - LSTM 層:
 
--- 包含 2 層 LSTM（num_layers=2）。
-每層有 64 個隱藏單元（hidden_size=64）。
-啟用 dropout（比率 0.2），在層間應用以防止過擬合。
+- 包含 2 層 LSTM（num_layers=2）。
+- 每層有 64 個隱藏單元（hidden_size=64）。
+- 啟用 dropout（比率 0.2），在層間應用以防止過擬合。
 
 - 全連接層 (Fully Connected Layer):
 
