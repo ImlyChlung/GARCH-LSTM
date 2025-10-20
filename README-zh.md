@@ -13,6 +13,17 @@
 
 ### LSTM 模型:
 
+```mermaid
+graph TD
+    A[Input Sequence<br>10 days, 5 features:<br>Returns, Conditional Volatility,<br>HL_Range, Log_Volume, Volume_ZScore<br>Shape: (batch_size, 10, 5)] --> B[LSTM Layer 1<br>64 hidden units]
+    B --> C[Dropout<br>0.2]
+    C --> D[LSTM Layer 2<br>64 hidden units]
+    D --> E[Fully Connected Layer<br>Output: 1 value]
+    E --> F[Predicted<br>Conditional Volatility (t+1) (%)]
+    subgraph Notes
+        G[Features normalized with MinMaxScaler<br>Runs on GPU if available, else CPU]
+    end
+
 ### 1. 輸入特徵
 
 LSTM 模型以 10 天為一個序列（seq_length=10）的五個特徵作為輸入，這些特徵從 **garch_data.csv** 中提取，具體如下：
