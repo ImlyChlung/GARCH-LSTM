@@ -10,6 +10,9 @@
 
 ![GARCH(1,1) 模型公式](figue/GARCH_equation.png)
 
+**可視化:**
+
+
 
 ### LSTM 模型:
 
